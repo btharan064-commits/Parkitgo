@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ParkitGo — Find Parking Near Me. Book in Seconds.</title>
+<meta name="description" content="ParkitGo helps you find parking near me and reserve a parking space near me in seconds — verified spaces, real-time slots, and secure payments.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#080B11;
+    --navy-900:#0B111A;
+    --navy-800:#121A28;
+    --navy-700:#1B2537;
+    --line-dark: rgba(255,255,255,0.09);
+    --blue-500:#2F6FED;
+    --blue-400:#5C8CF5;
+    --green-400:#22D98A;
+    --green-500:#17B871;
+    --green-600:#109455;
+    --paper:#F6F7FA;
+    --paper-2:#EFF1F6;
+    --ink-900:#0D1220;
+    --ink-700:#3A4258;
+    --slate-500:#69728A;
+    --slate-300:#A7AEC0;
+    --white:#FFFFFF;
+    --line:#E4E7EF;
+    --radius-s:10px;
+    --radius-m:16px;
+    --radius-l:26px;
+    --shadow-soft: 0 20px 50px -25px rgba(13,18,32,0.35);
+    --maxw:1200px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink-900);
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Sora', 'Inter', sans-serif;
+    margin:0;
+    color:inherit;
+    letter-spacing:-0.01em;
+  }
+  p{margin:0;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  img,svg{display:block; max-width:100%;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  .visually-hidden{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+
+  :focus-visible{outline:2px solid var(--blue-400); outline-offset:3px; border-radius:6px;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    padding:14px 26px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:15px;
+    border:1px solid transparent;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    white-space:nowrap;
+  }
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{
+    background:linear-gradient(135deg, var(--green-400), var(--green-600));
+    color:#052213;
+    box-shadow:0 12px 26px -10px rgba(23,184,113,0.55);
+  }
+  .btn-primary:hover{box-shadow:0 16px 32px -8px rgba(23,184,113,0.7);}
+  .btn-ghost-dark{
+    background:transparent;
+    color:var(--white);
+    border-color:rgba(255,255,255,0.28);
+  }
+  .btn-ghost-dark:hover{background:rgba(255,255,255,0.08);}
+  .btn-solid-light{
+    background:var(--white);
+    color:var(--navy-950);
+  }
+  .btn-solid-light:hover{background:#EDEFF4;}
+  .btn-outline-dark{
+    background:transparent;
+    border-color:var(--navy-900);
+    color:var(--navy-900);
+  }
+  .btn-outline-dark:hover{background:var(--navy-900); color:var(--white);}
+
+  /* ================= HEADER ================= */
+  .site-header{
+    position:sticky; top:0; z-index:60;
+    background:rgba(8,11,17,0.86);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line-dark);
+    padding-top:env(safe-area-inset-top,0px);
+  }
+  .header-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+    color:var(--white);
+  }
+  .brand{display:flex; align-items:center; gap:11px;}
+  .brand-mark{width:38px; height:38px; flex-shrink:0;}
+  .brand-text{display:flex; flex-direction:column; line-height:1;}
+  .brand-name{font-family:'Sora',sans-serif; font-weight:800; font-size:20px;}
+  .brand-name em{font-style:normal; color:var(--green-400);}
+  .brand-tag{font-size:9.5px; letter-spacing:0.22em; color:var(--slate-300); margin-top:3px;}
+
+  .main-nav{display:flex; align-items:center; gap:34px;}
+  .main-nav a{
+    font-size:14.5px; font-weight:500; color:var(--slate-300);
+    position:relative; padding-bottom:6px;
+  }
+  .main-nav a:hover{color:var(--white);}
+  .main-nav a.active{color:var(--white);}
+  .main-nav a.active::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2px;
+    background:var(--green-400); border-radius:2px;
+  }
+
+  .header-actions{display:flex; align-items:center; gap:10px;}
+  .header-actions .btn{padding:11px 20px; font-size:14px;}
+  .nav-toggle{
+    display:none; width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,0.2);
+    background:transparent; align-items:center; justify-content:center;
+  }
+  .nav-toggle svg{width:20px; height:20px; stroke:var(--white);}
+
+  .mobile-nav{
+    display:none;
+    background:var(--navy-950);
+    border-bottom:1px solid var(--line-dark);
+    padding:8px 28px 22px;
+  }
+  .mobile-nav a{display:block; padding:12px 0; color:var(--slate-300); font-weight:500; border-bottom:1px solid var(--line-dark);}
+  .mobile-nav a:last-of-type{border-bottom:none;}
+  .mobile-nav .mobile-actions{display:flex; gap:10px; margin-top:16px;}
+  .mobile-nav .btn{flex:1;}
+  body.nav-open .mobile-nav{display:block;}
+  body.nav-open .nav-toggle .icon-open{display:none;}
+  body.nav-open .nav-toggle .icon-close{display:block;}
+  .nav-toggle .icon-close{display:none;}
+
+  @media (max-width:900px){
+    .main-nav{display:none;}
+    .header-actions .btn-ghost-dark{display:none;}
+    .nav-toggle{display:flex;}
+  }
+  @media (max-width:560px){
+    .header-actions .btn-primary{display:none;}
+  }
+
+  /* ================= HERO ================= */
+  .hero{
+    background:
+      radial-gradient(1100px 550px at 82% -10%, rgba(47,111,237,0.35), transparent 60%),
+      radial-gradient(900px 500px at 8% 110%, rgba(34,217,138,0.18), transparent 60%),
+      linear-gradient(180deg, var(--navy-950), var(--navy-900) 60%, var(--navy-900));
+    color:var(--white);
+    padding:64px 0 88px;
+    overflow:hidden;
+  }
+  .hero-inner{
+    max-width:var(--maxw); margin:0 auto; padding:0 28px;
+    display:grid; grid-template-columns:1.02fr 1fr; gap:56px; align-items:center;
+  }
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; color:var(--green-400); font-weight:600;
+    margin-bottom:22px;
+  }
+  .hero-eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--green-400); box-shadow:0 0 0 4px rgba(34,217,138,0.18);}
+  .hero h1{
+    font-size:clamp(30px, 3.6vw, 46px);
+    line-height:1.14;
+    font-weight:700;
+    max-width:640px;
+  }
+  .hero h1 .accent{color:var(--green-400);}
+  .hero-sub{
+    margin-top:18px;
+    font-size:17px;
+    color:var(--slate-300);
+    max-width:460px;
+    line-height:1.6;
+  }
+
+  .search-card{
+    margin-top:34px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-l);
+    padding:18px;
+    display:flex; flex-direction:column; gap:12px;
+    backdrop-filter:blur(6px);
+  }
+  .field{
+    display:flex; align-items:center; gap:12px;
+    background:var(--white);
+    border-radius:var(--radius-m);
+    padding:13px 18px;
+    color:var(--ink-900);
+  }
+  .field .ficon{width:20px; height:20px; flex-shrink:0; color:var(--navy-700);}
+  .field .flabel{flex:1; min-width:0;}
+  .field .flabel select, .field .flabel input{
+    all:unset; display:block; width:100%; font-family:'Inter',sans-serif;
+  }
+  .field .ftitle{font-size:14.5px; font-weight:600; display:block;}
+  .field .fhint{font-size:12.5px; color:var(--slate-500); display:block; margin-top:1px;}
+  .field .chev{width:16px; height:16px; flex-shrink:0; color:var(--slate-500);}
+  .search-card .btn-primary{width:100%; padding:16px; font-size:15.5px;}
+
+  .hero-visual{position:relative;}
+  .garage-frame{
+    position:relative;
+    border-radius:28px;
+    overflow:hidden;
+    aspect-ratio: 6 / 5.2;
+    background:
+      radial-gradient(120% 100% at 100% 0%, rgba(47,111,237,0.35), transparent 55%),
+      linear-gradient(160deg, #1A2537 0%, #0E1522 55%, #0A0E17 100%);
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 40px 80px -30px rgba(0,0,0,0.6);
+  }
+  .garage-frame svg{width:100%; height:100%; display:block;}
+
+  .phone-mock{
+    position:absolute;
+    right:6%;
+    bottom:-8%;
+    width:44%;
+    max-width:230px;
+    filter:drop-shadow(0 30px 40px rgba(0,0,0,0.5));
+  }
+  .phone-mock .shell{
+    background:#0B0F17;
+    border-radius:34px;
+    padding:10px;
+    border:1px solid rgba(255,255,255,0.14);
+  }
+  .phone-mock .screen{
+    background:linear-gradient(180deg,#F6F8FC,#EDF1F8);
+    border-radius:24px;
+    overflow:hidden;
+    aspect-ratio:9/17.5;
+    position:relative;
+    color:var(--ink-900);
+  }
+  .phone-mock .screen-top{
+    display:flex; align-items:center; gap:7px; padding:16px 14px 10px;
+  }
+  .phone-mock .screen-top .pin-sm{width:20px; height:20px;}
+  .phone-mock .screen-top span{font-family:'Sora',sans-serif; font-weight:800; font-size:12px;}
+  .phone-mock .map-area{
+    margin:0 12px; height:44%; border-radius:16px;
+    background:
+      radial-gradient(60% 60% at 30% 30%, rgba(47,111,237,0.18), transparent 60%),
+      repeating-linear-gradient(0deg, #E3E9F5 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(90deg, #E3E9F5 0 1px, transparent 1px 22px),
+      #EEF2FA;
+    position:relative;
+  }
+  .phone-mock .map-pin{
+    position:absolute; top:38%; left:48%; width:26px; height:26px; transform:translate(-50%,-50%);
+  }
+  .phone-mock .slot-card{
+    margin:12px; background:var(--white); border-radius:14px; padding:12px;
+    box-shadow:0 10px 20px -12px rgba(13,18,32,0.25);
+  }
+  .phone-mock .slot-card .slot-title{font-weight:700; font-size:13px;}
+  .phone-mock .slot-card .slot-sub{font-size:10.5px; color:var(--slate-500); margin-top:2px;}
+  .phone-mock .slot-card .slot-btn{
+    margin-top:9px; background:var(--blue-500); color:#fff; text-align:center;
+    padding:8px; border-radius:9px; font-size:11.5px; font-weight:700;
+  }
+  .badge-float{
+    position:absolute; top:8%; right:8%;
+    background:rgba(8,11,17,0.7); border:1px solid rgba(255,255,255,0.14);
+    backdrop-filter:blur(6px);
+    border-radius:16px; padding:14px 18px; color:#fff; max-width:180px;
+  }
+  .badge-float .bf-title{font-family:'Sora',sans-serif; font-weight:700; font-size:15px; line-height:1.25;}
+  .badge-float .bf-rule{width:26px; height:2px; background:var(--green-400); margin-top:8px; border-radius:2px;}
+
+  @media (max-width:980px){
+    .hero-inner{grid-template-columns:1fr; gap:48px;}
+    .hero-visual{order:-1; max-width:520px; margin:0 auto; width:100%;}
+    .hero h1, .hero-sub{max-width:100%;}
+  }
+  @media (max-width:520px){
+    .hero{padding:40px 0 60px;}
+    .phone-mock{width:40%;}
+  }
+
+  /* ================= TRUST BAR ================= */
+  .trust-bar{
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    padding:6px 0;
+  }
+  .trust-grid{
+    max-width:var(--maxw); margin:0 auto; padding:34px 28px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
+  }
+  .trust-item{
+    display:flex; flex-direction:column; align-items:flex-start; gap:12px;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-top:3px solid var(--accent-c, var(--blue-500));
+    border-radius:var(--radius-m);
+    padding:22px 20px;
+    box-shadow:0 14px 30px -22px rgba(13,18,32,0.25);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .trust-item:hover{transform:translateY(-3px); box-shadow:0 18px 34px -18px rgba(13,18,32,0.3);}
+  .trust-item:nth-child(1){--accent-c:var(--blue-500);}
+  .trust-item:nth-child(2){--accent-c:var(--green-500);}
+  .trust-item:nth-child(3){--accent-c:var(--blue-500);}
+  .trust-item:nth-child(4){--accent-c:var(--green-500);}
+  .trust-icon{
+    width:46px; height:46px; border-radius:12px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--accent-c, var(--blue-500));
+    color:#fff;
+  }
+  .trust-icon svg{width:22px; height:22px;}
+  .trust-item h3{font-size:16.5px; font-weight:800; font-family:'Sora',sans-serif; color:var(--ink-900); letter-spacing:-0.01em;}
+  .trust-item p{font-size:13px; color:var(--slate-500); margin-top:-4px;}
+  @media (max-width:900px){
+    .trust-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:520px){
+    .trust-grid{grid-template-columns:1fr; gap:14px;}
+  }
+
+  /* ================= SECTION HEADERS ================= */
+  .section{padding:96px 0;}
+  .section-head{max-width:620px; margin:0 auto 54px; text-align:center;}
+  .section-kicker{
+    font-size:13.5px; font-weight:700; color:var(--green-600);
+  }
+  .section-head h2{
+    font-size:clamp(26px,3.4vw,38px); margin-top:12px; font-weight:700; color:var(--ink-900);
+  }
+  .section-head p{margin-top:14px; color:var(--slate-500); font-size:16px; line-height:1.6;}
+
+  /* ================= PLATFORM FEATURES ================= */
+  .features-section{background:var(--paper);}
+  .features-layout{
+    display:grid; grid-template-columns:360px 1fr; gap:76px; align-items:center;
+  }
+  .features-content .section-kicker{display:block; margin-bottom:14px;}
+  .features-content h2{
+    font-size:clamp(28px,3.6vw,42px); font-weight:700; line-height:1.18; color:var(--ink-900);
+  }
+  .features-content > p{
+    margin-top:18px; font-size:16px; color:var(--slate-500); line-height:1.65; max-width:460px;
+  }
+
+  .feature-list{margin-top:38px; display:flex; flex-direction:column; gap:14px;}
+  .feature-row{
+    display:flex; align-items:flex-start; gap:16px;
+    padding:14px 8px;
+  }
+  .feature-row.highlighted{
+    background:var(--white);
+    border:1.5px solid var(--ink-900);
+    border-radius:var(--radius-m);
+    padding:22px 24px;
+    align-items:flex-start;
+  }
+  .feature-row .fr-icon{
+    width:42px; height:42px; border-radius:11px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--paper-2); color:var(--ink-900);
+  }
+  .feature-row.highlighted .fr-icon{
+    background:linear-gradient(135deg, var(--green-400), var(--green-600));
+    color:#052213;
+  }
+  .feature-row .fr-icon svg{width:20px; height:20px;}
+  .feature-row h3{font-size:16.5px; font-weight:700; color:var(--ink-900);}
+  .feature-row.highlighted h3{margin-top:2px;}
+  .feature-row p{margin-top:6px; font-size:14px; color:var(--slate-500); line-height:1.6;}
+
+  /* device mockup card */
+  .features-visual{display:flex; justify-content:center;}
+  .device-card{
+    width:100%; max-width:320px;
+    background:var(--white);
+    border-radius:28px;
+    border:1px solid var(--line);
+    box-shadow:0 30px 60px -28px rgba(13,18,32,0.35);
+    overflow:hidden;
+  }
+  .device-statusbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px 6px; font-size:12px; font-weight:600; color:var(--ink-900);
+  }
+  .device-statusbar .ds-icons{display:flex; gap:5px; align-items:center; color:var(--ink-900);}
+  .device-statusbar svg{width:15px; height:15px;}
+  .device-toprow{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:6px 16px 10px; color:var(--ink-900);
+  }
+  .device-toprow svg{width:18px; height:18px;}
+  .device-toprow .dt-right{display:flex; gap:14px;}
+
+  .device-photo{
+    position:relative; margin:0 14px; border-radius:16px; overflow:hidden;
+    aspect-ratio:16/11;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.35)),
+      linear-gradient(160deg, #B9CBE8 0%, #7C93B8 45%, #48566E 100%);
+  }
+  .device-photo svg{width:100%; height:100%; display:block;}
+  .device-dots{
+    position:absolute; bottom:9px; left:50%; transform:translateX(-50%);
+    display:flex; gap:4px;
+  }
+  .device-dots span{width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.55);}
+  .device-dots span.active{background:#fff;}
+
+  .device-body{padding:16px 18px 0;}
+  .device-body h4{font-size:15.5px; font-weight:700; color:var(--ink-900);}
+  .device-meta{font-size:12px; color:var(--slate-500); margin-top:4px;}
+  .device-rating{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--slate-500); margin-top:8px;}
+  .device-rating .star{color:#F5A623;}
+  .device-desc{font-size:12.5px; color:var(--slate-500); line-height:1.6; margin-top:10px;}
+  .device-desc span{color:var(--blue-500); font-weight:600;}
+
+  .device-time-label{font-size:13.5px; font-weight:700; color:var(--ink-900); margin-top:16px;}
+  .device-toggle{display:flex; gap:8px; margin-top:10px;}
+  .device-toggle .tgl{
+    flex:1; text-align:center; padding:10px 8px; border-radius:10px; font-size:12.5px; font-weight:600;
+    border:1px solid var(--line); color:var(--ink-900);
+  }
+  .device-toggle .tgl.active{
+    background:var(--ink-900); color:#fff; border-color:var(--ink-900);
+  }
+  .device-toggle .tgl small{display:block; font-size:9.5px; font-weight:500; color:var(--green-400); margin-top:1px;}
+
+  .device-footer{
+    margin-top:16px; padding:14px 18px; border-top:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .device-footer .price-block .pl-label{font-size:10.5px; color:var(--slate-500);}
+  .device-footer .price-block .pl-save{color:var(--green-600); font-weight:700;}
+  .device-footer .price-block .pl-amount{font-size:15.5px; font-weight:800; color:var(--ink-900); margin-top:1px;}
+  .device-footer .price-block .pl-strike{font-size:11.5px; color:var(--slate-500); text-decoration:line-through; margin-left:5px; font-weight:500;}
+  .device-footer .btn{padding:11px 18px; font-size:13px;}
+
+  @media (max-width:900px){
+    .features-layout{grid-template-columns:1fr; gap:48px;}
+    .features-visual{order:-1;}
+  }
+
+  /* ================= REVIEWS ================= */
+  .reviews-section{background:var(--navy-950); color:var(--white); position:relative;}
+  .reviews-section .section-kicker{color:var(--green-400);}
+  .reviews-section .section-head h2{color:var(--white);}
+  .reviews-section .section-head p{color:var(--slate-300);}
+
+  .review-slider{position:relative; max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  .review-track-wrap{overflow:hidden;}
+  .review-track{
+    display:flex; gap:22px; transition:transform .5s cubic-bezier(.65,0,.35,1);
+  }
+  .review-card{
+    flex:0 0 calc(33.333% - 15px);
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-m);
+    padding:28px 26px;
+    display:flex; flex-direction:column;
+  }
+  .review-stars{display:flex; gap:3px; color:var(--green-400);}
+  .review-stars svg{width:16px; height:16px;}
+  .review-quote{margin-top:16px; font-size:15px; line-height:1.65; color:#E7EAF2; flex:1;}
+  .review-person{display:flex; align-items:center; gap:12px; margin-top:22px;}
+  .review-avatar{
+    width:40px; height:40px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Sora',sans-serif; font-weight:700; font-size:14px; color:#fff;
+  }
+  .review-person .rp-name{font-weight:700; font-size:14px;}
+  .review-person .rp-role{font-size:12.5px; color:var(--slate-300);}
+
+  .slider-controls{display:flex; align-items:center; justify-content:center; gap:18px; margin-top:36px;}
+  .slider-btn{
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.16);
+    display:flex; align-items:center; justify-content:center; color:#fff;
+  }
+  .slider-btn svg{width:18px; height:18px;}
+  .slider-btn:hover{background:rgba(255,255,255,0.14);}
+  .slider-dots{display:flex; gap:8px;}
+  .slider-dots .dot{width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25); border:none; padding:0;}
+  .slider-dots .dot.active{background:var(--green-400); width:22px; border-radius:5px; transition:all .25s ease;}
+
+  @media (max-width:940px){
+    .review-card{flex:0 0 calc(50% - 11px);}
+  }
+  @media (max-width:640px){
+    .review-card{flex:0 0 100%;}
+  }
+
+  /* ================= FAQ ================= */
+  .faq-section{background:var(--white);}
+  .faq-list{max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:14px;}
+  .faq-item{
+    border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden;
+    background:var(--paper);
+  }
+  .faq-q{
+    width:100%; text-align:left; background:none; border:none;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:20px 24px; font-family:'Sora',sans-serif; font-weight:600; font-size:15.5px; color:var(--ink-900);
+  }
+  .faq-q .qicon{
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    background:var(--white); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; color:var(--ink-900);
+    transition:transform .25s ease, background .25s ease, color .25s ease;
+  }
+  .faq-q .qicon svg{width:14px; height:14px;}
+  .faq-item.open .faq-q .qicon{background:var(--green-500); color:#fff; transform:rotate(45deg); border-color:transparent;}
+  .faq-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .faq-a-inner{padding:0 24px 22px; font-size:14.5px; color:var(--slate-500); line-height:1.7;}
+
+  /* ================= FINAL CTA ================= */
+  .final-cta{
+    background:
+      radial-gradient(900px 420px at 20% 0%, rgba(34,217,138,0.16), transparent 60%),
+      radial-gradient(900px 420px at 85% 100%, rgba(47,111,237,0.22), transparent 60%),
+      linear-gradient(180deg,var(--navy-900),var(--navy-950));
+    color:#fff; text-align:center; padding:90px 0;
+  }
+  .final-cta h2{font-size:clamp(28px,4vw,42px); max-width:640px; margin:0 auto; font-weight:700;}
+  .final-cta p{margin-top:16px; color:var(--slate-300); font-size:16px; max-width:520px; margin-left:auto; margin-right:auto;}
+  .final-cta-actions{display:flex; gap:16px; justify-content:center; margin-top:34px; flex-wrap:wrap;}
+  .final-cta .btn{padding:16px 32px; font-size:15.5px;}
+
+  /* ================= FOOTER ================= */
+  .site-footer{background:var(--navy-950); color:var(--slate-300); padding:72px 0 34px;}
+  .footer-grid{
+    display:grid; grid-template-columns:1.5fr 1fr 1fr 1.2fr; gap:40px;
+  }
+  .footer-brand .brand{margin-bottom:14px;}
+  .footer-brand .brand-name{color:#fff;}
+  .footer-desc{font-size:14px; line-height:1.7; max-width:320px; color:var(--slate-300);}
+  .footer-social{display:flex; gap:10px; margin-top:22px;}
+  .footer-social a{
+    width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,0.06);
+    display:flex; align-items:center; justify-content:center; color:#fff;
+    border:1px solid rgba(255,255,255,0.1);
+  }
+  .footer-social a:hover{background:rgba(255,255,255,0.14);}
+  .footer-social svg{width:16px; height:16px;}
+  .footer-col h4{font-size:15px; font-weight:700; color:#fff; margin-bottom:18px;}
+  .footer-col ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px;}
+  .footer-col a{font-size:14px; color:var(--slate-300);}
+  .footer-col a:hover{color:#fff;}
+  .footer-contact li{display:flex; gap:10px; align-items:flex-start; font-size:14px; margin-bottom:14px; list-style:none;}
+  .footer-contact svg{width:17px; height:17px; flex-shrink:0; margin-top:1px; color:var(--green-400);}
+  .footer-bottom{
+    margin-top:56px; padding-top:26px; border-top:1px solid var(--line-dark);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--slate-500);
+  }
+  @media (max-width:900px){
+    .footer-grid{grid-template-columns:1fr 1fr; row-gap:40px;}
+  }
+  @media (max-width:560px){
+    .footer-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#top" class="brand" aria-label="ParkitGo home">
+      <svg class="brand-mark" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="pinGrad" x1="0" y1="0" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#2F6FED"/>
+            <stop offset="1" stop-color="#22D98A"/>
+          </linearGradient>
+        </defs>
+        <path d="M24 0C10.8 0 0 10.7 0 23.8 0 40 24 56 24 56s24-16 24-32.2C48 10.7 37.2 0 24 0Z" fill="url(#pinGrad)"/>
+        <circle cx="24" cy="23" r="12.5" fill="#0B111A"/>
+        <path d="M17.5 26.5v-6.2c0-1.5 1.1-2.6 2.6-2.6h7.8c1.5 0 2.6 1.1 2.6 2.6v6.2M17.5 26.5h13M17.5 26.5c-.9 0-1.6-.7-1.6-1.6v-1c0-.5.4-.9.9-.9M30.5 26.5c.9 0 1.6-.7 1.6-1.6v-1c0-.5-.4-.9-.9-.9M20 20.2h8" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="20" cy="26.5" r="1.4" fill="#22D98A"/>
+        <circle cx="28" cy="26.5" r="1.4" fill="#22D98A"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">Parkit<em>Go</em></span>
+        <span class="brand-tag">FIND · PARK · GO</span>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="#top" class="active">Home</a>
+      <a href="#platform">Find Parking</a>
+      <a href="#platform">For Owners</a>
+      <a href="#faq">For Franchise</a>
+      <a href="#cta">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="#" class="btn btn-ghost-dark">Login</a>
+      <a href="#" class="btn btn-primary">Sign up</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" id="navToggle">
+        <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#top">Home</a>
+    <a href="#platform">Find Parking</a>
+    <a href="#platform">For Owners</a>
+    <a href="#faq">For Franchise</a>
+    <a href="#cta">Contact</a>
+    <div class="mobile-actions">
+      <a href="#" class="btn btn-ghost-dark">Login</a>
+      <a href="#" class="btn btn-primary">Sign up</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div>
+      <span class="hero-eyebrow"><span class="dot"></span>Now Live in Madurai</span>
+      <h1>Find parking near me, book in seconds.<br><span class="accent">Park smarter.</span></h1>
+      <p class="hero-sub">Your city. Your space. A smoother tomorrow — search a parking space near me and reserve your spot before you even leave home.</p>
+
+      <form class="search-card" aria-label="Search parking">
+        <label class="field">
+          <svg class="ficon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M6 17l1.2-5.4A2 2 0 0 1 9.15 10h5.7a2 2 0 0 1 1.95 1.6L18 17M7 17v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2m14 0v2a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2M6 13h12"/></svg>
+          <span class="flabel">
+            <span class="ftitle">Vehicle type</span>
+            <select class="fhint" aria-label="Vehicle type">
+              <option>Car, Bike, EV, etc.</option>
+              <option>Car</option>
+              <option>Bike</option>
+              <option>EV</option>
+            </select>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </label>
+
+        <label class="field">
+          <svg class="ficon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+          <span class="flabel">
+            <span class="ftitle">Location</span>
+            <input class="fhint" type="text" placeholder="Enter area, landmark or pincode" aria-label="Location">
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </label>
+
+        <label class="field">
+          <svg class="ficon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 12h.01M15 12h.01M9 9h.01M15 9h.01"/></svg>
+          <span class="flabel">
+            <span class="ftitle">District</span>
+            <select class="fhint" aria-label="District">
+              <option>Select your district</option>
+              <option>Chennai</option>
+              <option>Coimbatore</option>
+              <option>Madurai</option>
+            </select>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </label>
+
+        <button type="submit" class="btn btn-primary">
+          Find parking slots
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="hero-visual">
+      <div class="garage-frame">
+        <svg viewBox="0 0 640 560" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect width="640" height="560" fill="none"/>
+          <!-- floor -->
+          <rect x="0" y="420" width="640" height="140" fill="#0C121D"/>
+          <rect x="0" y="418" width="640" height="4" fill="rgba(255,255,255,0.06)"/>
+          <!-- columns -->
+          <rect x="60" y="60" width="46" height="380" fill="#182236"/>
+          <rect x="300" y="60" width="46" height="380" fill="#182236"/>
+          <rect x="540" y="60" width="46" height="380" fill="#182236"/>
+          <!-- ceiling pipes -->
+          <rect x="0" y="60" width="640" height="10" fill="rgba(255,255,255,0.05)"/>
+          <line x1="0" y1="90" x2="640" y2="90" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+          <!-- parking lines -->
+          <g stroke="#3A4A66" stroke-width="3">
+            <line x1="150" y1="440" x2="180" y2="330"/>
+            <line x1="260" y1="440" x2="270" y2="330"/>
+            <line x1="380" y1="440" x2="370" y2="330"/>
+            <line x1="480" y1="440" x2="460" y2="330"/>
+          </g>
+          <!-- cars -->
+          <g>
+            <rect x="185" y="345" width="70" height="34" rx="8" fill="#243554"/>
+            <rect x="192" y="335" width="50" height="18" rx="6" fill="#2E4266"/>
+            <circle cx="200" cy="379" r="6" fill="#0B0F17"/>
+            <circle cx="240" cy="379" r="6" fill="#0B0F17"/>
+          </g>
+          <g>
+            <rect x="380" y="352" width="66" height="32" rx="8" fill="#1F3049"/>
+            <rect x="388" y="342" width="46" height="17" rx="6" fill="#2A3E60"/>
+            <circle cx="395" cy="384" r="6" fill="#0B0F17"/>
+            <circle cx="432" cy="384" r="6" fill="#0B0F17"/>
+          </g>
+          <!-- level sign -->
+          <rect x="110" y="330" width="110" height="76" rx="8" fill="#080B11" stroke="rgba(255,255,255,0.15)"/>
+          <text x="165" y="362" font-family="Sora, sans-serif" font-weight="700" font-size="26" fill="#2F6FED" text-anchor="middle">P</text>
+          <text x="165" y="390" font-family="Sora, sans-serif" font-weight="600" font-size="13" fill="#fff" text-anchor="middle" letter-spacing="1">LEVEL B2</text>
+          <!-- glowing pin plaque -->
+          <g transform="translate(400,120)">
+            <rect x="-95" y="-15" width="190" height="230" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)"/>
+            <path d="M0 20C-30 20 -54 43 -54 73c0 40 54 92 54 92s54-52 54-92c0-30-24-53-54-53Z" fill="url(#pinGrad)" transform="scale(0.9)"/>
+            <circle cx="-3" cy="94" r="34" fill="#0B111A" transform="scale(0.9)"/>
+            <text x="0" y="200" font-family="Sora, sans-serif" font-weight="800" font-size="19" fill="#fff" text-anchor="middle">ParkitGo</text>
+            <text x="0" y="218" font-family="Inter, sans-serif" font-size="9" letter-spacing="2" fill="#22D98A" text-anchor="middle">FIND · PARK · GO</text>
+          </g>
+          <!-- lights -->
+          <circle cx="330" cy="70" r="4" fill="#EF5350"/>
+          <circle cx="440" cy="70" r="4" fill="#22D98A"/>
+          <circle cx="70" cy="200" r="3" fill="#EF5350"/>
+        </svg>
+
+        <div class="badge-float">
+          <div class="bf-title">Park anywhere, easily.</div>
+          <div class="bf-rule"></div>
+        </div>
+      </div>
+
+      <div class="phone-mock">
+        <div class="shell">
+          <div class="screen">
+            <div class="screen-top">
+              <svg class="pin-sm" viewBox="0 0 48 56" fill="none"><path d="M24 0C10.8 0 0 10.7 0 23.8 0 40 24 56 24 56s24-16 24-32.2C48 10.7 37.2 0 24 0Z" fill="url(#pinGrad)"/></svg>
+              <span>ParkitGo</span>
+            </div>
+            <div class="map-area">
+              <svg class="map-pin" viewBox="0 0 48 56" fill="none"><path d="M24 0C10.8 0 0 10.7 0 23.8 0 40 24 56 24 56s24-16 24-32.2C48 10.7 37.2 0 24 0Z" fill="url(#pinGrad)"/></svg>
+            </div>
+            <div class="slot-card">
+              <div class="slot-title">B2 · Slot 37</div>
+              <div class="slot-sub">5 min walk</div>
+              <div class="slot-btn">Book Now</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRUST BAR (rephrased 4 icons) ================= -->
+<section class="trust-bar">
+  <div class="trust-grid">
+    <div class="trust-item">
+      <span class="trust-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 11-14h-7l1-6Z"/></svg>
+      </span>
+      <div>
+        <h3>Instant Confirmation</h3>
+        <p>Zero wait time</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      </span>
+      <div>
+        <h3>Secure Payments</h3>
+        <p>UPI · Cards · Wallets</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+      </span>
+      <div>
+        <h3>Free Cancellation</h3>
+        <p>Up to 30 mins prior</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>
+      </span>
+      <div>
+        <h3>Live Tracking</h3>
+        <p>Real-time slot status</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PLATFORM FEATURES ================= -->
+<section class="section features-section" id="platform">
+  <div class="wrap">
+    <div class="features-layout">
+
+      <div class="features-visual">
+        <div class="device-card">
+          <div class="device-statusbar">
+            <span>9:41</span>
+            <span class="ds-icons">
+              <svg viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="14" width="3" height="6"/><rect x="6" y="10" width="3" height="10"/><rect x="11" y="6" width="3" height="14"/><rect x="16" y="2" width="3" height="18"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8.5a16 16 0 0 1 20 0M5.5 12.2a11 11 0 0 1 13 0M9 16a6 6 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1" fill="currentColor" stroke="none"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="7" width="19" height="10" rx="2.5"/><rect x="22" y="10" width="1.6" height="4" rx="0.8" fill="currentColor" stroke="none"/><rect x="3.3" y="8.8" width="14.5" height="6.4" rx="1" fill="currentColor" stroke="none"/></svg>
+            </span>
+          </div>
+          <div class="device-toprow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            <div class="dt-right">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0-13 4 4m-4-4-4 4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4Z"/></svg>
+            </div>
+          </div>
+
+          <div class="device-photo">
+            <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="0,120 60,70 110,110 160,55 210,105 260,60 320,110 320,200 0,200" fill="#5C6E8C" opacity="0.6"/>
+              <polygon points="0,140 80,100 150,135 230,95 320,135 320,200 0,200" fill="#3E4C66"/>
+              <g>
+                <rect x="18" y="150" width="46" height="24" rx="5" fill="#0D1220"/>
+                <rect x="24" y="142" width="34" height="13" rx="4" fill="#1B2537"/>
+                <rect x="80" y="155" width="46" height="24" rx="5" fill="#2F6FED"/>
+                <rect x="86" y="147" width="34" height="13" rx="4" fill="#5C8CF5"/>
+                <rect x="142" y="150" width="46" height="24" rx="5" fill="#EDEFF4"/>
+                <rect x="148" y="142" width="34" height="13" rx="4" fill="#fff"/>
+                <rect x="204" y="156" width="46" height="24" rx="5" fill="#17B871"/>
+                <rect x="210" y="148" width="34" height="13" rx="4" fill="#22D98A"/>
+                <rect x="266" y="151" width="46" height="24" rx="5" fill="#0D1220"/>
+                <rect x="272" y="143" width="34" height="13" rx="4" fill="#1B2537"/>
+              </g>
+            </svg>
+            <div class="device-dots">
+              <span class="active"></span><span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <div class="device-body">
+            <h4>Anna Salai Smart Parking</h4>
+            <div class="device-meta">Anna Salai, Chennai</div>
+            <div class="device-rating"><span class="star">★</span> 4.3 · 1.8 km away</div>
+            <p class="device-desc">A shaded, CCTV-monitored lot right by the metro entrance, with dedicated two-wheeler bays. <span>View more</span></p>
+
+            <div class="device-time-label">Set your parking time</div>
+            <div class="device-toggle">
+              <div class="tgl">Hourly</div>
+              <div class="tgl active">Monthly<small>Best value</small></div>
+            </div>
+          </div>
+
+          <div class="device-footer">
+            <div class="price-block">
+              <div class="pl-label">Monthly total <span class="pl-save">Save ₹300</span></div>
+              <div class="pl-amount">₹1500.00<span class="pl-strike">₹1800.00</span></div>
+            </div>
+            <a href="#" class="btn btn-primary">Request Slot</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="features-content">
+        <span class="section-kicker">PLATFORM FEATURES</span>
+        <h2>Built for the real<br>parking experience.</h2>
+        <p>Whether you're heading to work, shopping, or catching a flight, ParkitGo helps you find and book a parking space near me before you even arrive.</p>
+
+        <div class="feature-list">
+          <div class="feature-row highlighted">
+            <span class="fr-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 11-14h-7l1-6Z"/></svg>
+            </span>
+            <div>
+              <h3>Request your Slot</h3>
+              <p>Request your preferred slot before payment — you pay only once it's confirmed.</p>
+            </div>
+          </div>
+          <div class="feature-row">
+            <span class="fr-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18h2l1-8h8l1 8h2M9 10V7a3 3 0 0 1 6 0v3M9 14h1m4 0h1"/></svg>
+            </span>
+            <h3>EV Charging Facility</h3>
+          </div>
+          <div class="feature-row">
+            <span class="fr-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+            </span>
+            <h3>24/7 Support</h3>
+          </div>
+          <div class="feature-row">
+            <span class="fr-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>
+            </span>
+            <h3>Live Slot Tracking</h3>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= REVIEWS (slider) ================= -->
+<section class="section reviews-section" id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">What drivers say</span>
+      <h2>Real reviews from people who searched parking near me</h2>
+      <p>A few words from the drivers and owners already using ParkitGo across the city.</p>
+    </div>
+  </div>
+
+  <div class="review-slider">
+    <div class="review-track-wrap">
+      <div class="review-track" id="reviewTrack">
+
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-quote">I typed in my office landmark and had a parking space near me booked before I'd even left the house. Saved me a good fifteen minutes of circling the block.</p>
+          <div class="review-person">
+            <span class="review-avatar" style="background:#2F6FED;">AR</span>
+            <div><div class="rp-name">Arjun R.</div><div class="rp-role">Daily commuter, Chennai</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-quote">Listing my basement lot took a day to get approved, and now it earns quietly every week. The dashboard shows exactly who booked and when.</p>
+          <div class="review-person">
+            <span class="review-avatar" style="background:#17B871;">SM</span>
+            <div><div class="rp-name">Sujatha M.</div><div class="rp-role">Space owner, T. Nagar</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-quote">Had to cancel a booking last minute and it was refunded without any fuss, well within the free window. That alone earned my trust.</p>
+          <div class="review-person">
+            <span class="review-avatar" style="background:#1B2537;">KV</span>
+            <div><div class="rp-name">Karthik V.</div><div class="rp-role">Bike rider</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-quote">As a franchise partner managing four lots, the live tracking means I always know occupancy without a single phone call to my field staff.</p>
+          <div class="review-person">
+            <span class="review-avatar" style="background:#2F6FED;">PN</span>
+            <div><div class="rp-name">Priya N.</div><div class="rp-role">Franchise partner</div></div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-quote">Whenever I search parking near me before a hospital visit, I get an actual verified spot, not just a guess on a map. Big difference.</p>
+          <div class="review-person">
+            <span class="review-avatar" style="background:#17B871;">DF</span>
+            <div><div class="rp-name">Deepa F.</div><div class="rp-role">EV driver</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="slider-controls">
+      <button class="slider-btn" id="prevBtn" aria-label="Previous reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="slider-dots" id="sliderDots"></div>
+      <button class="slider-btn" id="nextBtn" aria-label="Next reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section faq-section" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">Common questions</span>
+      <h2>Parking space near me — frequently asked</h2>
+      <p>Everything drivers usually ask before their first booking on ParkitGo.</p>
+    </div>
+
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          How do I find a parking space near me on ParkitGo?
+          <span class="qicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Enter your area, a nearby landmark, or your pincode into the search bar on the home page. ParkitGo lists every verified parking space near me within your chosen district, along with walking distance, pricing, and live availability.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Can I reserve a parking space near me ahead of time?
+          <span class="qicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Yes. Once you've found parking near me for your date and time, you can lock in the slot immediately and get instant confirmation — no need to arrive and hope a spot is free.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Is cancelling a booking free?
+          <span class="qicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">You can cancel any parking near me booking free of charge up to 30 minutes before your reserved start time, and the refund lands back on your original payment method.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          How are parking spaces near me verified before listing?
+          <span class="qicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Every listing goes through a two-stage approval chain: a field executive checks the space in person, then an administrator reviews and approves it, so what you see listed as parking space near me actually exists and is accurate.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Can I list my own space for others searching parking near me?
+          <span class="qicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Yes — head to "For Owners," add your driveway, lot or basement space, and once it clears verification it appears to anyone nearby searching for a parking space near me, with automated pricing handling the rest.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="final-cta" id="cta">
+  <div class="wrap">
+    <h2>Your next parking space near me is a few taps away</h2>
+    <p>Whether you're hunting for a spot right now or planning ahead, ParkitGo makes parking near me simple, fast, and worry-free.</p>
+    <div class="final-cta-actions">
+      <a href="#top" class="btn btn-primary">
+        Find Parking
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#footer" class="btn btn-solid-light">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer" id="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="brand">
+          <svg class="brand-mark" viewBox="0 0 48 56" fill="none" width="34" height="34">
+            <path d="M24 0C10.8 0 0 10.7 0 23.8 0 40 24 56 24 56s24-16 24-32.2C48 10.7 37.2 0 24 0Z" fill="url(#pinGrad)"/>
+            <circle cx="24" cy="23" r="12.5" fill="#0B111A"/>
+          </svg>
+          <span class="brand-text">
+            <span class="brand-name">ParkitGo</span>
+            <span class="brand-tag" style="letter-spacing:0.08em; text-transform:none; font-size:11px;">Space Rental &amp; Management</span>
+          </span>
+        </a>
+        <p class="footer-desc">Find, park, go — a responsive platform connecting land owners, field executives, administrators and drivers, with location-based discovery, a two-stage approval chain and automated pricing.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.2h-3.1V7.7c0-.9.3-1.6 1.7-1.6h1.5V3.2C15.9 3.1 14.8 3 13.6 3c-2.5 0-4.2 1.5-4.2 4.3V9.8H6.7V13h2.7v8h4.1Z"/></svg></a>
+          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5.9c-.7.3-1.5.5-2.3.6.8-.5 1.4-1.3 1.7-2.2-.8.4-1.6.8-2.5 1a4 4 0 0 0-6.8 3.6A11.3 11.3 0 0 1 3 4.9a4 4 0 0 0 1.2 5.3c-.6 0-1.2-.2-1.7-.5v.1a4 4 0 0 0 3.2 3.9c-.5.1-1.1.2-1.7.1a4 4 0 0 0 3.7 2.8A8 8 0 0 1 2 18.4a11.3 11.3 0 0 0 6.1 1.8c7.3 0 11.3-6.1 11.3-11.3v-.5c.8-.6 1.4-1.3 1.9-2.1Z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9Z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#top">Find Parking</a></li>
+          <li><a href="#platform">List your space</a></li>
+          <li><a href="#platform">Pricing</a></li>
+          <li><a href="#faq">How it works</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#cta">Contact</a></li>
+          <li><a href="#faq">Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Reach us</h4>
+        <ul class="footer-contact">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+            <span>Chennai, Tamil Nadu</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5c0 9.4 6.6 16 16 16l3-3.4-5.6-2-2 2.4c-2.6-1.1-5-3.5-6-6l2.4-2L8.4 3 5 3Z"/></svg>
+            <span>+91 90000 00000</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 6 8 6 8-6"/></svg>
+            <span>support@parkitgo.com</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 ParkitGo. All rights reserved.</span>
+      <span>Privacy Policy · Terms of Service</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // mobile nav toggle
+  var toggle = document.getElementById('navToggle');
+  toggle.addEventListener('click', function(){
+    var open = document.body.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var q = item.querySelector('.faq-q');
+    var a = item.querySelector('.faq-a');
+    q.addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(openItem){
+        if(openItem !== item){
+          openItem.classList.remove('open');
+          openItem.querySelector('.faq-q').setAttribute('aria-expanded','false');
+          openItem.querySelector('.faq-a').style.maxHeight = null;
+        }
+      });
+      if(isOpen){
+        item.classList.remove('open');
+        q.setAttribute('aria-expanded','false');
+        a.style.maxHeight = null;
+      } else {
+        item.classList.add('open');
+        q.setAttribute('aria-expanded','true');
+        a.style.maxHeight = a.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Review slider
+  var track = document.getElementById('reviewTrack');
+  var cards = track.children;
+  var dotsWrap = document.getElementById('sliderDots');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var index = 0;
+
+  function perView(){
+    var w = window.innerWidth;
+    if(w <= 640) return 1;
+    if(w <= 940) return 2;
+    return 3;
+  }
+
+  function maxIndex(){
+    return Math.max(0, cards.length - perView());
+  }
+
+  function buildDots(){
+    dotsWrap.innerHTML = '';
+    var total = maxIndex() + 1;
+    for(var i=0;i<total;i++){
+      var d = document.createElement('button');
+      d.className = 'dot' + (i===index ? ' active' : '');
+      d.setAttribute('aria-label','Go to review set ' + (i+1));
+      (function(i){ d.addEventListener('click', function(){ index = i; render(); }); })(i);
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  function render(){
+    index = Math.min(index, maxIndex());
+    var cardWidth = cards[0].getBoundingClientRect().width;
+    var gap = 22;
+    track.style.transform = 'translateX(' + (-(cardWidth+gap)*index) + 'px)';
+    Array.prototype.forEach.call(dotsWrap.children, function(d, i){
+      d.classList.toggle('active', i===index);
+    });
+  }
+
+  prevBtn.addEventListener('click', function(){
+    index = index <= 0 ? maxIndex() : index - 1;
+    render();
+  });
+  nextBtn.addEventListener('click', function(){
+    index = index >= maxIndex() ? 0 : index + 1;
+    render();
+  });
+
+  var resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){ buildDots(); render(); }, 120);
+  });
+
+  buildDots();
+  render();
+
+  // gentle autoplay
+  var auto = setInterval(function(){
+    index = index >= maxIndex() ? 0 : index + 1;
+    render();
+    Array.prototype.forEach.call(dotsWrap.children, function(d,i){ d.classList.toggle('active', i===index); });
+  }, 5500);
+  [track, prevBtn, nextBtn].forEach(function(el){
+    el.addEventListener('mouseenter', function(){ clearInterval(auto); });
+  });
+})();
+</script>
+
+</body>
+</html>
